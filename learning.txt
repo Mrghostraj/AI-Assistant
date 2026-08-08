@@ -1,0 +1,57 @@
+Sounddevice --> PortAudio --> ALSA This is working 
+ffmpeg --> PulseAudio/RDPSource  --> This is working 
+
+The Architecture we use:-
+🎤 Windows Microphone
+        ↓
+       WSLg
+        ↓
+   PulseAudio
+        ↓
+    RDPSource
+        ↓
+      FFmpeg
+        ↓
+   float32 PCM
+        ↓
+    NumPy array
+        ↓
+   Faster-Whisper
+
+   This will be the final pipeline:-
+   🎤 Mic
+ ↓
+recorder.py
+ ↓
+float32 audio
+ ↓
+VAD
+ ↓
+Faster-Whisper
+ ↓
+Text
+ ↓
+Qwen 2.5
+ ↓
+Response
+ ↓
+Piper
+ ↓
+🔊 Speaker
+
+COMMANDS-
+ffmpeg \
+-f pulse \
+-i default \
+-ac 1 \
+-ar 16000 \
+-f f32le \
+pipe:1
+
+Command Meaning:-
+-f pulse → PulseAudio input
+-i default → RDPSource
+-ac 1 → mono
+-ar 16000 → 16 kHz
+-f f32le → 32-bit floating-point PCM
+pipe:1 → audio file me nahi, stdout me bhejo
