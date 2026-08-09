@@ -13,7 +13,7 @@ def main():
 
     print("\nSpeak Now....")
 
-    audio= record_audio(duration=5)
+    audio= record_audio()
 
     text, info = stt.transcribe(audio)
 
@@ -28,7 +28,7 @@ def main():
 
     response = ask(text)
 
-    print("\n Assistant:", response)
+    print("\nAssistant:", response)
 
     tts.speak(response)
 

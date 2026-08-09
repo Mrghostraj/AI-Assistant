@@ -7,7 +7,7 @@ class VoiceActivityDetector:
         self.model = load_silero_vad()
 
     def is_speech(self, audio_chunk, sample_rate=16000):
-        audio_tensor =  torch.from_numpy(audio_chunk)
+        audio_tensor =  torch.from_numpy(audio_chunk.copy())
 
         speech_probabilty = self.model(audio_tensor, sample_rate)
 
