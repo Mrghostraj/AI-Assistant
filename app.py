@@ -5,7 +5,8 @@ from llm.ollama_client import ask
 
 stt = speechtotext(model_size="base")
 tts = texttospeech(
-    "./voices/en_US-lessac-medium.onnx"
+    "./voices/en_US-lessac-medium.onnx",
+    "./voices/hi_IN-pratham-medium.onnx"
 )
 
 def main():
@@ -30,7 +31,7 @@ def main():
 
     print("\nAssistant:", response)
 
-    tts.speak(response)
+    tts.speak(response, info.language)
 
 
 if __name__ == "__main__":

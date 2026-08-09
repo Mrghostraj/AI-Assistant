@@ -1,7 +1,7 @@
 from faster_whisper import WhisperModel
 
 class speechtotext:
-    def __init__(self, model_size="base"):
+    def __init__(self, model_size="small"):
         self.model = WhisperModel(
             model_size,
             device="auto",
@@ -9,7 +9,8 @@ class speechtotext:
         )
 
     def transcribe(self, audio):
-        segments, info = self.model.transcribe(audio)
+
+        segments, info = self.model.transcribe(audio, language = "hi")
 
         text = " ".join(segment.text.strip() for segment in segments)
 

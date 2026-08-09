@@ -4,14 +4,20 @@ from piper import PiperVoice
 
 class texttospeech:
 
-    def __init__(self, voice_model):
-        self.voice = PiperVoice.load(voice_model)
+    def __init__(self, english_voice, hindi_voice):
 
-    def speak(self, text):
+        self.voices = {
+            "en": PiperVoice.load(english_voice),
+            "hi": PiperVoice.load(hindi_voice)
+        }
+
+    def speak(self, text, language="en"):
+
+        voice = self.voices.get(language, self.voices["en"])
 
         process = None
 
-        for audio_chunk in self.voice.synthesize(text):
+        for audio_chunk in voice.synthesize(text):
 
             if process is None:
                 process = subprocess.Popen(
