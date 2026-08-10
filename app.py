@@ -3,7 +3,7 @@ from speech.recorder import record_audio
 from speech.Text_to_speech import texttospeech
 from llm.ollama_client import ask
 
-stt = speechtotext(model_size="base")
+stt = speechtotext(model_size="small")
 tts = texttospeech(
     "./voices/en_US-lessac-medium.onnx",
     "./voices/hi_IN-pratham-medium.onnx"

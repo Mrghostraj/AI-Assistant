@@ -10,7 +10,7 @@ class speechtotext:
 
     def transcribe(self, audio):
 
-        segments, info = self.model.transcribe(audio, language = "hi")
+        segments, info = self.model.transcribe(audio)
 
         text = " ".join(segment.text.strip() for segment in segments)
 
