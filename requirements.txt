@@ -2,7 +2,7 @@ faster-whisper
 sounddevice
 scipy
 requests
-numpy
+numpy==1.26.4 # Neede this for openwakeword
 piper-tts
 onnxruntime
 simpleaudio
@@ -11,3 +11,4 @@ torchvision==0.26.0
 torchaudio==2.11.0
 silero-vad
 soundfile
+openwakeword

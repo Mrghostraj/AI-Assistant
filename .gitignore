@@ -1,3 +1,13 @@
+hindi_test_stt.wav
+hindi_test.wav
+pratham_test.wav
+priyamvada_test.wav
+rohan_test.wav
+wakeword/
+wakeword_training/
 voices/
 response.wav
 test.wav
+__pycache__/
+*.py[cod]
+

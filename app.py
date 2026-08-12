@@ -20,6 +20,7 @@ def main():
 
 
     print("Language:", info.language)
+    print("Probability:", info.language_probability)
     print("\nYou:", text)
 
 

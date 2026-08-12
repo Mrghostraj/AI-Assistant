@@ -10,9 +10,9 @@ channels = 1
 chunk_size = 512
 
 speech_threshold = 0.5
-silence_duration = 1
+silence_duration = 1.5
 
-pre_buffer_duration = 0.2
+pre_buffer_duration = 0.4
 
 
 def read_exact(stream, size):

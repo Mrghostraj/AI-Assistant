@@ -2,11 +2,11 @@ import requests
 
 
 URL = "http://localhost:11434/api/generate"
-MODEL = "qwen2.5:3b"
+MODEL = "llama3.2:3b"
 
 
 SYSTEM_PROMPT = """
-You are Jarvis, a personal AI voice assistant.
+You are Aira, a personal AI voice assistant.
 
 Your job is to understand the user's spoken request and respond naturally.
 
