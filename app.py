@@ -2,7 +2,7 @@ from speech.speech_to_text import speechtotext
 from speech.recorder import record_audio
 from speech.Text_to_speech import texttospeech
 from llm.ollama_client import ask
-from tools.utility_tools import get_date, get_time
+from tools.utility_tools import handle_task
 
 # ============================================================
 # INITIALIZE MODELS
@@ -24,21 +24,6 @@ EXIT_COMMANDS = [
     "bye",
     "goodbye"
 ]
-
-#=============================================================
-# TAST HANDLEING
-#=============================================================
-def handle_task(text):
-
-    lower_text = text.lower().strip()
-
-    # Time 
-    if "what time" in lower_text or "current time" in lower_text:
-        return f"It is {get_time}"
-
-    # Date 
-    if "what date" in lower_text or "today's date " in lower_text:
-        return f"It is {get_date}"
 
 
 # ============================================================
