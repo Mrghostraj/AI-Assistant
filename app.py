@@ -2,7 +2,7 @@ from speech.speech_to_text import speechtotext
 from speech.recorder import record_audio
 from speech.Text_to_speech import texttospeech
 from llm.ollama_client import ask
-
+from tools.utility_tools import get_date, get_time
 
 # ============================================================
 # INITIALIZE MODELS
@@ -21,15 +21,24 @@ tts = texttospeech(
 # ============================================================
 
 EXIT_COMMANDS = [
-    "exit",
-    "quit",
-    "stop",
     "bye",
-    "goodbye",
-    "band karo",
-    "band kar do",
-    "bas",
+    "goodbye"
 ]
+
+#=============================================================
+# TAST HANDLEING
+#=============================================================
+def handle_task(text):
+
+    lower_text = text.lower().strip()
+
+    # Time 
+    if "what time" in lower_text or "current time" in lower_text:
+        return f"It is {get_time}"
+
+    # Date 
+    if "what date" in lower_text or "today's date " in lower_text:
+        return f"It is {get_date}"
 
 
 # ============================================================
@@ -113,25 +122,22 @@ def main():
         # ----------------------------------------------------
         # SEND TO LLM
         # ----------------------------------------------------
+        task_response = handle_task(text)
 
-        try:
+        if task_response:
+            reponse = task_response
 
-            response = ask(
+        else:
+            try:
+                response = ask(
                 text,
                 conversation_history
-            )
+                )
 
-        except TypeError:
+            except Exception as e:
 
-            # In case your current ask() only accepts
-            # one argument
-            response = ask(text)
-
-        except Exception as e:
-
-            print("LLM error:", e)
-            continue
-
+                print("LLM error:", e)
+                continue
 
         # ----------------------------------------------------
         # DISPLAY RESPONSE
