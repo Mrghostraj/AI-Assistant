@@ -4,6 +4,7 @@ from speech.Text_to_speech import texttospeech
 from llm.ollama_client import ask
 from tools.utility_tools import handle_task
 
+
 # ============================================================
 # INITIALIZE MODELS
 # ============================================================
@@ -20,10 +21,13 @@ tts = texttospeech(
 # CONFIGURATION
 # ============================================================
 
-EXIT_COMMANDS = [
+EXIT_COMMANDS = {
     "bye",
-    "goodbye"
-]
+    "goodbye",
+    "exit",
+    "quit",
+    "stop"
+}
 
 
 # ============================================================
@@ -39,19 +43,28 @@ def main():
     print("Speak naturally. Say 'exit' or 'bye' to stop.")
     print("=" * 50)
 
+    # Conversation memory
     conversation_history = []
+
+
+    # ========================================================
+    # CONTINUOUS CONVERSATION LOOP
+    # ========================================================
 
     while True:
 
         # ----------------------------------------------------
-        # RECORD USER AUDIO
+        # RECORD AUDIO
         # ----------------------------------------------------
 
         print("\n🎤 Speak Now...")
 
         try:
+
             audio = record_audio()
+
         except Exception as e:
+
             print("Recording error:", e)
             continue
 
@@ -61,8 +74,11 @@ def main():
         # ----------------------------------------------------
 
         try:
+
             text, info = stt.transcribe(audio)
+
         except Exception as e:
+
             print("STT error:", e)
             continue
 
@@ -79,6 +95,11 @@ def main():
 
         text = text.strip()
 
+
+        # ----------------------------------------------------
+        # DISPLAY USER INPUT
+        # ----------------------------------------------------
+
         print("\nYou:", text)
         print("Language:", info.language)
         print("Probability:", info.language_probability)
@@ -88,35 +109,64 @@ def main():
         # EXIT COMMAND
         # ----------------------------------------------------
 
-        text_lower = text.lower()
+        text_lower = text.lower().strip()
 
-        if any(command in text_lower for command in EXIT_COMMANDS):
+        if text_lower in EXIT_COMMANDS:
 
             goodbye = "Okay, talk to you later!"
 
             print("\nAssistant:", goodbye)
 
             try:
-                tts.speak(goodbye, info.language)
+
+                tts.speak(
+                    goodbye,
+                    info.language
+                )
+
             except Exception as e:
+
                 print("TTS error:", e)
 
             break
 
 
-        # ----------------------------------------------------
-        # SEND TO LLM
-        # ----------------------------------------------------
-        task_response = handle_task(text)
+        # ====================================================
+        # FIRST: CHECK UTILITY TASKS
+        # ====================================================
 
-        if task_response:
-            reponse = task_response
+        try:
+
+            task_response = handle_task(text)
+
+        except Exception as e:
+
+            print("Utility tool error:", e)
+            task_response = None
+
+
+        # ====================================================
+        # IF TASK WAS HANDLED
+        # ====================================================
+
+        if task_response is not None:
+
+            response = task_response
+
+            print("\nAssistant:", response)
+
+
+        # ====================================================
+        # OTHERWISE USE LLM
+        # ====================================================
 
         else:
+
             try:
+
                 response = ask(
-                text,
-                conversation_history
+                    text,
+                    conversation_history
                 )
 
             except Exception as e:
@@ -124,16 +174,13 @@ def main():
                 print("LLM error:", e)
                 continue
 
-        # ----------------------------------------------------
-        # DISPLAY RESPONSE
-        # ----------------------------------------------------
 
-        print("\nAssistant:", response)
+            print("\nAssistant:", response)
 
 
-        # ----------------------------------------------------
+        # ====================================================
         # SAVE CONVERSATION
-        # ----------------------------------------------------
+        # ====================================================
 
         conversation_history.append({
             "role": "user",
@@ -146,9 +193,9 @@ def main():
         })
 
 
-        # ----------------------------------------------------
+        # ====================================================
         # TEXT TO SPEECH
-        # ----------------------------------------------------
+        # ====================================================
 
         try:
 
@@ -162,8 +209,13 @@ def main():
             print("TTS error:", e)
 
 
+        # ====================================================
+        # LOOP CONTINUES AUTOMATICALLY
+        # ====================================================
+
+
 # ============================================================
-# START
+# START AIRA
 # ============================================================
 
 if __name__ == "__main__":
