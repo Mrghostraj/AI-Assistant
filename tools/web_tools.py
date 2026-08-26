@@ -1,38 +1,29 @@
 import subprocess
 import urllib.parse
 
-def open_url(url, browser=None):
+
+# ============================================================
+# OPEN URL
+# ============================================================
+
+def open_url(url):
 
     try:
 
-        if browser:
-
-            command = [
-                "cmd.exe",
-                "/c",
-                "start",
-                "",
-                browser,
-                url
-            ]
-
-        else:
-
-            command = [
-                "cmd.exe",
-                "/c",
-                "start",
-                "",
-                url
-            ]
-
         subprocess.Popen(
-            command,
+            [
+                "cmd.exe",
+                "/c",
+                "start",
+                "",
+                url
+            ],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
         )
 
         return True
+
 
     except Exception as e:
 
@@ -41,62 +32,111 @@ def open_url(url, browser=None):
         return False
 
 
-def open_website(name, url):
+# ============================================================
+# OPEN GOOGLE
+# ============================================================
 
-    if open_url(url):
-        return f"Opening {name}."
+def open_google():
 
-    return f"I could not open {name}."
+    success = open_url(
+        "https://www.google.com"
+    )
 
+    if success:
+        return "Opening Google."
+
+    return "I could not open Google."
+
+
+# ============================================================
+# OPEN YOUTUBE
+# ============================================================
+
+def open_youtube():
+
+    success = open_url(
+        "https://www.youtube.com"
+    )
+
+    if success:
+        return "Opening YouTube."
+
+    return "I could not open YouTube."
+
+
+# ============================================================
+# GOOGLE SEARCH
+# ============================================================
 
 def google_search(query):
 
     query = query.strip()
 
     if not query:
+
         return "What would you like me to search for?"
+
+
+    encoded_query = urllib.parse.quote_plus(
+        query
+    )
 
     url = (
         "https://www.google.com/search?q="
-        + urllib.parse.quote_plus(query)
+        + encoded_query
     )
 
-    if open_url(url):
+
+    success = open_url(url)
+
+    if success:
+
         return f"Searching Google for {query}."
 
     return "I could not perform the Google search."
 
+
+# ============================================================
+# YOUTUBE SEARCH
+# ============================================================
 
 def youtube_search(query):
 
     query = query.strip()
 
     if not query:
+
         return "What would you like me to search for on YouTube?"
+
+
+    encoded_query = urllib.parse.quote_plus(
+        query
+    )
 
     url = (
         "https://www.youtube.com/results?search_query="
-        + urllib.parse.quote_plus(query)
+        + encoded_query
     )
 
-    if open_url(url):
+
+    success = open_url(url)
+
+    if success:
+
         return f"Searching YouTube for {query}."
 
     return "I could not perform the YouTube search."
 
 
+# ============================================================
+# TEST
+# ============================================================
+
 if __name__ == "__main__":
 
-    # print(open_website(
-    #     "Google",
-    #     "https://www.google.com"
-    # ))
+    print(open_google())
 
-    # print(open_website(
-    #     "YouTube",
-    #     "https://www.youtube.com"
-    # ))
-
+    # Uncomment when testing:
+    # print(open_youtube())
     # print(google_search("Python machine learning"))
-
-    print(youtube_search("Python tutorial"))
+    # print(youtube_search("Python tutorial"))

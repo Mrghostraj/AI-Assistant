@@ -1,9 +1,11 @@
 import re
+from tools.file_tools import handle_file_task
 
 from tools.date_time import (
     get_current_time,
     get_current_date,
     get_current_day,
+    get_date_and_day,
     get_date_time
 )
 
@@ -13,33 +15,46 @@ from tools.applications import (
 )
 
 from tools.web_tools import (
-    open_url,
+    open_google,
+    open_youtube,
     google_search,
     youtube_search
 )
 
 
+# ============================================================
+# TASK HANDLER
+# ============================================================
+
 def handle_task(text):
 
     text = text.lower().strip()
 
-    print(f"[DEBUG] Task: {text}")
+    print(
+        f"[DEBUG] handle_task received: {text}"
+    )
 
 
     # ========================================================
     # DATE + TIME
     # ========================================================
 
-    if re.search(
-        r"\b(date and time|date time|day and time)\b",
-        text
+    if (
+        "date and time" in text
+        or "date and current time" in text
+        or "day and time" in text
+        or "date time" in text
     ):
+
+        print(
+            "[DEBUG] DATE + TIME TASK DETECTED"
+        )
 
         return get_date_time()
 
 
     # ========================================================
-    # TIME
+    # CURRENT TIME
     # ========================================================
 
     time_patterns = [
@@ -57,11 +72,15 @@ def handle_task(text):
         for pattern in time_patterns
     ):
 
+        print(
+            "[DEBUG] TIME TASK DETECTED"
+        )
+
         return get_current_time()
 
 
     # ========================================================
-    # DATE
+    # CURRENT DATE
     # ========================================================
 
     date_patterns = [
@@ -81,11 +100,15 @@ def handle_task(text):
         for pattern in date_patterns
     ):
 
+        print(
+            "[DEBUG] DATE TASK DETECTED"
+        )
+
         return get_current_date()
 
 
     # ========================================================
-    # DAY
+    # CURRENT DAY
     # ========================================================
 
     day_patterns = [
@@ -101,27 +124,11 @@ def handle_task(text):
         for pattern in day_patterns
     ):
 
-        return get_current_day()
-
-
-    # ========================================================
-    # YOUTUBE ON BRAVE
-    # ========================================================
-
-    if re.search(
-        r"\b(open|launch|start)\s+youtube\s+(on|in)\s+brave\b",
-        text
-    ):
-
-        return (
-            "Opening YouTube on Brave."
-            if open_url(
-                "https://www.youtube.com",
-                "brave"
-            )
-            else
-            "I could not open YouTube on Brave."
+        print(
+            "[DEBUG] DAY TASK DETECTED"
         )
+
+        return get_current_day()
 
 
     # ========================================================
@@ -133,14 +140,11 @@ def handle_task(text):
         text
     ):
 
-        return (
-            "Opening Google."
-            if open_url(
-                "https://www.google.com"
-            )
-            else
-            "I could not open Google."
+        print(
+            "[DEBUG] GOOGLE TASK DETECTED"
         )
+
+        return open_google()
 
 
     # ========================================================
@@ -152,14 +156,11 @@ def handle_task(text):
         text
     ):
 
-        return (
-            "Opening YouTube."
-            if open_url(
-                "https://www.youtube.com"
-            )
-            else
-            "I could not open YouTube."
+        print(
+            "[DEBUG] YOUTUBE TASK DETECTED"
         )
+
+        return open_youtube()
 
 
     # ========================================================
@@ -167,22 +168,35 @@ def handle_task(text):
     # ========================================================
 
     google_patterns = [
+
         r"search google for (.+)",
         r"search google (.+)",
         r"google search (.+)",
-        r"search (.+) on google"
+        r"search (.+) on google",
+
     ]
+
 
     for pattern in google_patterns:
 
-        match = re.search(pattern, text)
+        match = re.search(
+            pattern,
+            text
+        )
 
         if match:
 
             query = match.group(1).strip()
 
             if query:
-                return google_search(query)
+
+                print(
+                    "[DEBUG] GOOGLE SEARCH DETECTED"
+                )
+
+                return google_search(
+                    query
+                )
 
 
     # ========================================================
@@ -190,22 +204,35 @@ def handle_task(text):
     # ========================================================
 
     youtube_patterns = [
+
         r"search youtube for (.+)",
         r"search youtube (.+)",
         r"youtube search (.+)",
-        r"search (.+) on youtube"
+        r"search (.+) on youtube",
+
     ]
+
 
     for pattern in youtube_patterns:
 
-        match = re.search(pattern, text)
+        match = re.search(
+            pattern,
+            text
+        )
 
         if match:
 
             query = match.group(1).strip()
 
             if query:
-                return youtube_search(query)
+
+                print(
+                    "[DEBUG] YOUTUBE SEARCH DETECTED"
+                )
+
+                return youtube_search(
+                    query
+                )
 
 
     # ========================================================
@@ -213,14 +240,20 @@ def handle_task(text):
     # ========================================================
 
     open_patterns = [
+
         r"open (.+)",
         r"launch (.+)",
         r"start (.+)"
+
     ]
+
 
     for pattern in open_patterns:
 
-        match = re.search(pattern, text)
+        match = re.search(
+            pattern,
+            text
+        )
 
         if match:
 
@@ -228,11 +261,21 @@ def handle_task(text):
 
             if app_name in APPLICATIONS:
 
-                return open_application(app_name)
+                print(
+                    "[DEBUG] APPLICATION TASK DETECTED"
+                )
+
+                return open_application(
+                    app_name
+                )
 
 
     # ========================================================
     # NO TASK
     # ========================================================
+
+    print(
+        "[DEBUG] NO TASK DETECTED"
+    )
 
     return None
